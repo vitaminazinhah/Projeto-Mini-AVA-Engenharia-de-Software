@@ -1,14 +1,20 @@
-from tkinter import messagebox
 import customtkinter as ctk
+from tkinter import messagebox
+import re
 
 def login(self):
-    username = self.username_entry.get()
-    password = self.password_entry.get()
+    email = self.email_entry.get()  
+    password = self.password_entry.get()  
 
-    if username in self.users and self.users[username] == password:
+    # Verifica se o email e a senha estão corretos
+    if email in self.users and self.users[email]['password'] == password:
         messagebox.showinfo("Login Successful", "Welcome to the Mini AVA!")
+        
+        # Limpa a mensagem de erro caso o login seja bem-sucedido
+        self.error_label.configure(text="")  # Limpar a mensagem de erro
     else:
-        messagebox.showerror("Login Failed", "Invalid username or password.")
+        # Exibe a mensagem de erro
+        self.error_label.configure(text="Invalid email or password.", text_color="red")
 
 def show_login_screen(self):
     for widget in self.winfo_children():
@@ -26,14 +32,18 @@ def show_login_screen(self):
     login_label = ctk.CTkLabel(right_frame, text="Login", font=ctk.CTkFont(size=20, weight="bold"))
     login_label.pack(pady=20)
 
-    self.username_entry = ctk.CTkEntry(right_frame, placeholder_text="Username")
-    self.username_entry.pack(pady=10)
+    self.email_entry = ctk.CTkEntry(right_frame, placeholder_text="Email")
+    self.email_entry.pack(pady=10)
 
     self.password_entry = ctk.CTkEntry(right_frame, placeholder_text="Password", show="*")
     self.password_entry.pack(pady=10)
 
     login_button = ctk.CTkButton(right_frame, text="Login", command=self.login)
     login_button.pack(pady=20)
+
+    # Novo Label para mensagem de erro
+    self.error_label = ctk.CTkLabel(right_frame, text="", font=ctk.CTkFont(size=10), text_color="red")
+    self.error_label.pack(pady=5)
 
     new_user_frame = ctk.CTkFrame(right_frame, fg_color="transparent")
     new_user_frame.pack(pady=10)
@@ -44,6 +54,7 @@ def show_login_screen(self):
     create_account_label = ctk.CTkLabel(new_user_frame, text="Create an account", font=ctk.CTkFont(size=12, weight="bold"), text_color="blue")
     create_account_label.pack(side="left")
     create_account_label.bind("<Button-1>", lambda e: self.show_register_screen())
+
 
 def show_register_screen(self):
     for widget in self.winfo_children():
@@ -61,22 +72,65 @@ def show_register_screen(self):
     register_label = ctk.CTkLabel(right_frame, text="Create an Account", font=ctk.CTkFont(size=20, weight="bold"))
     register_label.pack(pady=20)
 
-    self.username_entry = ctk.CTkEntry(right_frame, placeholder_text="Username")
-    self.username_entry.pack(pady=10)
+    # Campos de entrada para nome, sobrenome, email, senha e confirmação de senha
+    self.first_name_entry = ctk.CTkEntry(right_frame, placeholder_text="First Name")
+    self.first_name_entry.pack(pady=10)
+
+    self.last_name_entry = ctk.CTkEntry(right_frame, placeholder_text="Last Name")
+    self.last_name_entry.pack(pady=10)
+
+    self.email_entry = ctk.CTkEntry(right_frame, placeholder_text="Email")
+    self.email_entry.pack(pady=10)
 
     self.password_entry = ctk.CTkEntry(right_frame, placeholder_text="Password", show="*")
     self.password_entry.pack(pady=10)
 
+    self.confirm_password_entry = ctk.CTkEntry(right_frame, placeholder_text="Confirm Password", show="*")
+    self.confirm_password_entry.pack(pady=10)
+
+    # Botão de registro
     register_button = ctk.CTkButton(right_frame, text="Register", command=self.register)
     register_button.pack(pady=20)
 
 def register(self):
-    username = self.username_entry.get()
+    # Pegando os valores dos campos de entrada
+    first_name = self.first_name_entry.get()
+    last_name = self.last_name_entry.get()
+    email = self.email_entry.get()
     password = self.password_entry.get()
+    confirm_password = self.confirm_password_entry.get()
 
-    if username and password:
-        self.users[username] = password
-        messagebox.showinfo("Registration Successful", f"User {username} registered successfully!")
-        self.show_login_screen()
-    else:
-        messagebox.showerror("Error", "Please fill out both fields.")
+    # Limpar a mensagem de erro anterior, se houver
+    self.error_label.configure(text="")
+
+    # Validação dos campos
+    if not first_name or not last_name or not email or not password or not confirm_password:
+        self.error_label.configure(text="Please fill out all fields.", text_color="red")
+        return
+
+    # Verificando se a senha tem pelo menos 6 caracteres
+    if len(password) < 6:
+        self.error_label.configure(text="Password must be at least 6 characters long.", text_color="red")
+        return
+
+    # Verificando se a confirmação da senha corresponde à senha
+    if password != confirm_password:
+        self.error_label.configure(text="Passwords do not match.", text_color="red")
+        return
+
+    # Validando o formato do e-mail
+    email_regex = r"(^[\w\.-]+@[\w\.-]+\.\w{2,}$)"
+    if not re.match(email_regex, email):
+        self.error_label.configure(text="Invalid email format.", text_color="red")
+        return
+
+    # Verificando se o e-mail já existe no sistema
+    if email in self.users:
+        self.error_label.configure(text="This email is already registered.", text_color="red")
+        return
+
+    # Se tudo estiver correto, armazena o usuário e mostra mensagem de sucesso
+    self.users[email] = {'first_name': first_name, 'last_name': last_name, 'password': password}
+    self.save_users() 
+    messagebox.showinfo("Registration Successful", f"User {first_name} {last_name} registered successfully!")
+    self.show_login_screen()
