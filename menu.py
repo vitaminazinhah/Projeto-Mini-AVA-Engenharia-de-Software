@@ -4,7 +4,7 @@ from tkcalendar import Calendar
 import datetime
 import subprocess
 import perfil
-import turmas_do_usuario
+import turmas_do_usuario as tdu
 
 # Configuração inicial do CustomTkinter
 ctk.set_appearance_mode("dark")
@@ -24,16 +24,19 @@ class GoogleClassroomApp(ctk.CTk):
         self.geometry("1000x600")
 
         print(f"{self.name} {last_name} {email}")
-        # Inicia sem turmas
-        self.classes = []
         
         # Lista de códigos das turmas (para validação)
-        self.class_codes = {}
+        self.class_codes = []
 
         self.base_color = "#333333"  # Cor base escura para botões e elementos
         self.hover_color = "#444444"  # Cor para hover
         self.background_color = "#000000"  # Cor de fundo preta
         self.create_widgets()
+
+    def buscar_turmas_por_codigo(self):  #ISSO DAQUI É NOVO VIU 
+        lista_de_turmas = tdu.carregar_turmas_de_arquivo()
+        turmas_encontradas = [turma for turma in lista_de_turmas if turma.codigo in self.class_codes]
+        return turmas_encontradas
 
     def create_widgets(self):
         # Navbar
@@ -178,11 +181,20 @@ class GoogleClassroomApp(ctk.CTk):
 
     def verify_class_code(self, code, window):
         # Verifica se o código da turma é válido
-        if code in self.class_codes:
-            class_index = self.class_codes[code]
-            class_info = self.classes[class_index]
-            messagebox.showinfo("Sucesso", f"Você entrou na turma {class_info['name']} com o código {code}.")
-            window.destroy()
+        lista_de_turmas = tdu.carregar_turmas_de_arquivo()
+        
+        achou = 0
+        codigo = int(code)
+        for i in lista_de_turmas:
+            print(i.nome, i.codigo, codigo)
+            input("pressione enter")
+            if codigo == i.codigo:
+                self.class_codes.append(codigo)
+                messagebox.showinfo("Sucesso, Você entrou na turma.")
+                achou = 1
+                window.destroy()
+        if achou == 1:
+            pass   
         else:
             messagebox.showerror("Erro", "Código de turma inválido. Tente novamente.")
 
