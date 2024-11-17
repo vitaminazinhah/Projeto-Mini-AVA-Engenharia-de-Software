@@ -3,5 +3,20 @@
         "first_name": "emily",
         "last_name": "rocha",
         "password": "91205362"
+    },
+    "gata@gmail.com": {
+        "first_name": "aaaaa",
+        "last_name": "aaaaaa",
+        "password": "91205362"
+    },
+    "pablom@gmail.com": {
+        "first_name": "Pablo",
+        "last_name": "Munih",
+        "password": "123456"
+    },
+    "arygrande@gmail.com": {
+        "first_name": "Ariana",
+        "last_name": "Grande",
+        "password": "123456"
     }
 }

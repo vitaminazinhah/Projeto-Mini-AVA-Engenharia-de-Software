@@ -54,3 +54,5 @@ class MiniAVA(ctk.CTk):
 
 app = MiniAVA()
 app.mainloop()
+
+ 
