@@ -6,12 +6,13 @@ ctk.set_default_color_theme("blue")  # Temas: "blue", "green", "dark-blue"
 
 
 class TelaPerfil:
-    def __init__(self, root, nome, sobrenome, email):
+    def __init__(self, root, login, nome, sobrenome, email):
         self.root = root  # Janela principal onde a tela de perfil será exibida
         self.nome = nome
+        self.login = login
         self.sobrenome = sobrenome
         self.email = email
-
+        print(f"{nome} {sobrenome} {email}")
         self.app = ctk.CTkToplevel(root)  # Cria uma nova janela
         self.app.geometry("400x350")
         self.app.title("Perfil do Usuário")
@@ -38,13 +39,24 @@ class TelaPerfil:
 
         # Botão 'Voltar'
         button_voltar = ctk.CTkButton(self.app, text="Voltar", command=self.voltar)  # Associa a função 'voltar'
-        button_voltar.pack(pady=20)
+        button_voltar.pack(pady=10)
+
+        # Botão 'Sair'
+        button_sair = ctk.CTkButton(self.app, text="Sair", command=self.sair)  # Associa a função 'sair'
+        button_sair.pack(pady=10)
 
     def voltar(self):
         self.root.deiconify()
         self.app.destroy()  # Fecha a janela de perfil
 
-def call_perfil(menu,name,last_name,email):
+    def sair(self):
+        self.login.deiconify()
+        self.root.destroy()  # Fecha a janela principal
+        self.app.destroy()  # Fecha a janela de perfil
+
+
+def call_perfil(menu, login, name, last_name, email):
     menu.withdraw()
-    app = TelaPerfil(menu, name,last_name,email)
+    print(f"{name} {last_name} {email}")
+    app = TelaPerfil(menu, login, name, last_name, email)
     app.mainloop()
