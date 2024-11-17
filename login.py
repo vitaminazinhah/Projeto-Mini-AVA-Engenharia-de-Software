@@ -150,7 +150,7 @@ def register(self):
             self.error_label.configure(text="This email is already registered.", text_color="red")
         return
 
-    self.users[email] = {'first_name': first_name, 'last_name': last_name, 'password': password}
+    self.users[email] = {'first_name': first_name, 'last_name': last_name, 'password': password,'lista_criadas':[],'lista_colocadas':[]}
     self.save_users()
     messagebox.showinfo("Registration Successful", f"User {first_name} {last_name} registered successfully!")
     self.show_login_screen()
