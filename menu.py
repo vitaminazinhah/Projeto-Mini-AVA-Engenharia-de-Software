@@ -23,6 +23,7 @@ class GoogleClassroomApp(ctk.CTk):
         self.title("Google Classroom")
         self.geometry("1000x600")
 
+        print(f"{self.name} {last_name} {email}")
         # Inicia sem turmas
         self.classes = []
         
@@ -36,42 +37,36 @@ class GoogleClassroomApp(ctk.CTk):
 
     def create_widgets(self):
         # Navbar
-        navbar_frame = ctk.CTkFrame(self, height=60, fg_color=self.background_color)
+        navbar_frame = ctk.CTkFrame(self, height=120, fg_color=self.background_color)
         navbar_frame.pack(fill="x", side="top", padx=10, pady=10)
-
-        # Botão de hambúrguer para abrir/fechar a navbar
-        hamburger_button = ctk.CTkButton(navbar_frame, text="☰", width=40, height=40, command=self.toggle_menu, fg_color=self.base_color, hover_color=self.hover_color)
-        hamburger_button.pack(side="left", padx=20)
 
         # Título
         title_label = ctk.CTkLabel(navbar_frame, text="Google Classroom", font=ctk.CTkFont(size=20, weight="bold"), text_color="white")
         title_label.pack(side="left", padx=20)
 
-        # Painel lateral que ficará escondido inicialmente
-        self.sidebar_frame = ctk.CTkFrame(self, width=200, height=600, fg_color=self.background_color)
-        self.sidebar_frame.pack(side="left", fill="y", padx=0, pady=0)
-        self.sidebar_frame.pack_forget()  # Começa escondido
+        # Painel para os botões no canto superior direito
+        top_right_frame = ctk.CTkFrame(navbar_frame, fg_color=self.background_color)
+        top_right_frame.pack(side="right", padx=20)
 
-        # Centralizando os botões na sidebar
-        self.home_button = ctk.CTkButton(self.sidebar_frame, text="Início", width=180, command=self.show_home, fg_color=self.base_color, hover_color=self.hover_color)
-        self.home_button.pack(side="top", fill="x", pady=10)
+        # Frame para os botões ao lado do "+"
+        buttons_frame = ctk.CTkFrame(top_right_frame, fg_color=self.background_color)
+        buttons_frame.pack(side="left", padx=10)
 
-        self.create_class_button = ctk.CTkButton(self.sidebar_frame, text="Criar Turma", width=180, command=self.create_class, fg_color=self.base_color, hover_color=self.hover_color)
-        self.create_class_button.pack(side="top", fill="x", pady=10)
+        # Botão de Participar de Turma com ícone de "+"
+        join_class_button = ctk.CTkButton(buttons_frame, text="+", width=30, height=30, command=self.show_join_class_window, fg_color=self.base_color, hover_color=self.hover_color, font=ctk.CTkFont(size=20, weight="bold"), corner_radius=15)
+        join_class_button.pack(side="left", padx=10)
 
-        self.join_class_button = ctk.CTkButton(self.sidebar_frame, text="Participar de Turma", width=180, command=self.show_join_class_window, fg_color=self.base_color, hover_color=self.hover_color)
-        self.join_class_button.pack(side="top", fill="x", pady=10)
+        # Botão de Criar Turma
+        create_class_button = ctk.CTkButton(buttons_frame, text="Criar Turma", width=180, command=self.create_class, fg_color=self.base_color, hover_color=self.hover_color)
+        create_class_button.pack(side="left", padx=10)
 
-        self.profile_button = ctk.CTkButton(self.sidebar_frame, text="Perfil", width=180, command=self.show_profile, fg_color=self.base_color, hover_color=self.hover_color)
-        self.profile_button.pack(side="top", fill="x", pady=10)
+        # Botão de Agenda
+        agenda_button = ctk.CTkButton(buttons_frame, text="Agenda", width=180, command=self.show_agenda, fg_color=self.base_color, hover_color=self.hover_color)
+        agenda_button.pack(side="left", padx=10)
 
-        # Botão Agenda
-        self.agenda_button = ctk.CTkButton(self.sidebar_frame, text="Agenda", width=180, command=self.show_agenda, fg_color=self.base_color, hover_color=self.hover_color)
-        self.agenda_button.pack(side="top", fill="x", pady=10)
-
-        # Botão de Logout
-        self.logout_button = ctk.CTkButton(self.sidebar_frame, text="Logout", width=180, command=self.logout, fg_color="red", hover_color="#660000")
-        self.logout_button.pack(side="top", fill="x", pady=10)
+        # Botão de Perfil em formato de bola pequena
+        profile_button = ctk.CTkButton(top_right_frame, text="P", width=30, height=30, command=self.show_profile, fg_color=self.base_color, hover_color=self.hover_color, font=ctk.CTkFont(size=16, weight="bold"), corner_radius=15)
+        profile_button.pack(side="left", padx=10)
 
     def show_agenda(self):
         # Fecha a janela principal (ou seja, fecha a aplicação principal)
@@ -164,7 +159,7 @@ class GoogleClassroomApp(ctk.CTk):
 
     def show_profile(self):
         # Exemplo de exibição do perfil do usuário
-        perfil.call_perfil(self,self.name,self.lastname,self.email)
+        perfil.call_perfil(self,self.parent,self.name,self.lastname,self.email)
 
     def show_join_class_window(self):
         # Janela para inserir código de turma
@@ -205,5 +200,5 @@ class GoogleClassroomApp(ctk.CTk):
 
 
 if __name__ == "__main__":
-    app = GoogleClassroomApp()
+    app = GoogleClassroomApp(2,"pablo","munih","pablo@gmail.com")
     app.mainloop()
