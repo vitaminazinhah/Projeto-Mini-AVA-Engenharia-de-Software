@@ -1,6 +1,7 @@
 import customtkinter as ctk
 from tkinter import messagebox
 import re
+from menu import GoogleClassroomApp
 
 def login(self):
     email = self.email_entry.get()  
@@ -8,10 +9,18 @@ def login(self):
 
     # Verifica se o email e a senha estão corretos
     if email in self.users and self.users[email]['password'] == password:
-        messagebox.showinfo("Login Successful", "Welcome to the Mini AVA!")
+
+        self.email_entry.delete(0, ctk.END)
+        self.password_entry.delete(0, ctk.END)
+
+        self.error_label.configure(text="")  # Limpar a mensagem de erro
+
+        self.withdraw()
+        app = GoogleClassroomApp(self, self.users[email]['first_name'],self.users[email]['last_name'],email)
+        app.mainloop()
         
         # Limpa a mensagem de erro caso o login seja bem-sucedido
-        self.error_label.configure(text="")  # Limpar a mensagem de erro
+        
     else:
         # Exibe a mensagem de erro
         self.error_label.configure(text="Invalid email or password.", text_color="red")

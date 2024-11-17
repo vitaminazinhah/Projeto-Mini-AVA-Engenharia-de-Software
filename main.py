@@ -3,6 +3,7 @@ from PIL import Image, ImageTk
 from login import show_login_screen, login, show_register_screen, register
 import json
 
+
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("blue")
 
@@ -13,7 +14,8 @@ class MiniAVA(ctk.CTk):
         self.title("Mini AVA")
         self.geometry("800x400")
 
-        
+        self.protocol("WM_DELETE_WINDOW", self.on_closing)
+
         self.image = Image.open("imagens/login.png")
         self.image = self.image.resize((400, 400))
         self.photo = ImageTk.PhotoImage(self.image)
@@ -26,7 +28,9 @@ class MiniAVA(ctk.CTk):
 
       
         self.students = []
-
+    def on_closing(self):
+        # Fecha todas as janelas e encerra a aplicação
+        self.destroy()
     def load_users(self):
         
         try:
