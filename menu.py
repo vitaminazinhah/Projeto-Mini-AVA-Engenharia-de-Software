@@ -34,6 +34,8 @@ class GoogleClassroomApp(ctk.CTk):
         self.background_color = "#000000"  # Cor de fundo preta
         self.create_widgets()
 
+        self.show_classes_grid()
+
     def buscar_turmas_por_codigo(self):  #ISSO DAQUI É NOVO VIU 
         lista_de_turmas = tdu.carregar_turmas_de_arquivo()
         turmas_encontradas = [turma for turma in lista_de_turmas if turma.codigo in self.class_codes]
@@ -71,6 +73,13 @@ class GoogleClassroomApp(ctk.CTk):
         # Botão de Perfil em formato de bola pequena
         profile_button = ctk.CTkButton(top_right_frame, text="P", width=30, height=30, command=self.show_profile, fg_color=self.base_color, hover_color=self.hover_color, font=ctk.CTkFont(size=16, weight="bold"), corner_radius=15)
         profile_button.pack(side="left", padx=10)
+
+        atualizar = ctk.CTkButton(top_right_frame, text="Atualizar", width=30, height=30, command=self.atualizar, fg_color=self.base_color, hover_color=self.hover_color, font=ctk.CTkFont(size=16, weight="bold"), corner_radius=15)
+        atualizar.pack(side="left", padx=10)
+    def atualizar(self):
+        self.destroy()
+        app = GoogleClassroomApp(self.parent,self.name,self.lastname,self.email)
+        app.mainloop()
 
     def show_agenda(self):
         # Fecha a janela principal (ou seja, fecha a aplicação principal)
@@ -122,34 +131,49 @@ class GoogleClassroomApp(ctk.CTk):
             self.sidebar_frame.pack(side="left", fill="y", padx=0, pady=0)  # Mostra com animação de deslizamento
 
     def show_classes_grid(self):
+    # Carregando os dados do arquivo JSON onde o dicionário está armazenado
+        with open('users.json', 'r') as file:
+            data = json.load(file)
+
+        # Acessa a lista de turmas do usuário usando o email
+        user_data = data.get(self.email, {})
+        self.classes = user_data.get("lista_colocadas", [])
+
         # Modal de visualização de turmas
         grid_frame = ctk.CTkFrame(self, fg_color=self.background_color)
         grid_frame.pack(pady=20, fill="both", expand=True)
-
-        # Verifica se há turmas para mostrar
+        print(self.classes)
+    # Verifica se há turmas para mostrar
         if not self.classes:
             no_classes_label = ctk.CTkLabel(grid_frame, text="Nenhuma turma cadastrada.", font=ctk.CTkFont(size=16, weight="bold"), text_color="white")
             no_classes_label.pack(pady=20)
         else:
-            for i, class_info in enumerate(self.classes):
-                class_frame = ctk.CTkFrame(grid_frame, width=200, height=200, corner_radius=10, fg_color="#222222")
-                class_frame.grid(row=i//2, column=i%2, padx=20, pady=20)
+            # Itera pela lista de turmas e cria um retângulo (frame) para cada turma
+            for i, class_code in enumerate(self.classes):
+                # Carregando informações da turma pelo código
+                lista_de_turmas = tdu.carregar_turmas_de_arquivo()
+                print("oi")
+                turma_info = next((turma for turma in lista_de_turmas if turma.codigo == class_code), None)
 
-                # Nome da turma
-                class_name_label = ctk.CTkLabel(class_frame, text=class_info['name'], font=ctk.CTkFont(size=16, weight="bold"), text_color="white")
-                class_name_label.pack(pady=10)
+                if turma_info:
+                    class_frame = ctk.CTkFrame(grid_frame, width=200, height=200, corner_radius=10, fg_color="#222222")
+                    class_frame.grid(row=i//2, column=i%2, padx=20, pady=20)
 
-                # Subtítulo da turma
-                class_subtitle_label = ctk.CTkLabel(class_frame, text=class_info['subtitle'], font=ctk.CTkFont(size=12), text_color="white")
-                class_subtitle_label.pack(pady=5)
+                    # Nome da turma
+                    class_name_label = ctk.CTkLabel(class_frame, text=turma_info.nome, font=ctk.CTkFont(size=16, weight="bold"), text_color="white")
+                    class_name_label.pack(pady=10)
 
-                # Professor
-                class_teacher_label = ctk.CTkLabel(class_frame, text=f"Professor: {class_info['teacher']}", font=ctk.CTkFont(size=10), text_color="white")
-                class_teacher_label.pack(pady=5)
+                    # Subtítulo da turma
+                    class_subtitle_label = ctk.CTkLabel(class_frame, text=turma_info.descricao, font=ctk.CTkFont(size=12), text_color="white")
+                    class_subtitle_label.pack(pady=5)
 
-                # Botão para selecionar a turma
-                class_button = ctk.CTkButton(class_frame, text="Ver Conteúdo", command=lambda i=i: self.view_class_content(i), fg_color=self.base_color, hover_color=self.hover_color)
-                class_button.pack(pady=10)
+                    # Professor
+                    class_teacher_label = ctk.CTkLabel(class_frame, text=f"codigo: {turma_info.codigo}", font=ctk.CTkFont(size=10), text_color="white")
+                    class_teacher_label.pack(pady=5)
+
+                    # Botão para selecionar a turma
+                    class_button = ctk.CTkButton(class_frame, text="Ver Conteúdo", command=lambda i=i: self.view_class_content(i), fg_color=self.base_color, hover_color=self.hover_color)
+                    class_button.pack(pady=10)
 
     def show_home(self):
         messagebox.showinfo("Início", "Bem-vindo à plataforma Google Classroom!")
@@ -191,7 +215,7 @@ class GoogleClassroomApp(ctk.CTk):
             if codigo == i.codigo:
                 with open('users.json', 'r') as file:
                     data = json.load(file)
-                data[self.email]["lista_colocadas"].append(code)
+                data[self.email]["lista_colocadas"].append(codigo)
                 with open('users.json', 'w') as file:
                     json.dump(data, file, indent=4)
                 messagebox.showinfo("Sucesso, Você entrou na turma.")

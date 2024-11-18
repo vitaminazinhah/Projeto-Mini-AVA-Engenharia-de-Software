@@ -17,18 +17,27 @@
     "arygrande@gmail.com": {
         "first_name": "Ariana",
         "last_name": "Grande",
-        "password": "123456"
+        "password": "123456",
+        "lista_criadas": [],
+        "lista_colocadas": []
     },
     "rani@gmail.com": {
         "first_name": "raniel",
         "last_name": "ferreira",
-        "password": "123456"
+        "password": "123456",
+        "lista_criadas": [],
+        "lista_colocadas": [
+            4993
+        ]
     },
     "p@gmail.com": {
         "first_name": "pedro",
         "last_name": "requisitos",
         "password": "123456",
         "lista_criadas": [],
-        "lista_colocadas": []
+        "lista_colocadas": [
+            8296,
+            4993
+        ]
     }
 }
