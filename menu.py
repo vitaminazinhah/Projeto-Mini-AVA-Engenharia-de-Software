@@ -152,7 +152,6 @@ class GoogleClassroomApp(ctk.CTk):
             for i, class_code in enumerate(self.classes):
                 # Carregando informações da turma pelo código
                 lista_de_turmas = tdu.carregar_turmas_de_arquivo()
-                print("oi")
                 turma_info = next((turma for turma in lista_de_turmas if turma.codigo == class_code), None)
 
                 if turma_info:
@@ -172,7 +171,13 @@ class GoogleClassroomApp(ctk.CTk):
                     class_teacher_label.pack(pady=5)
 
                     # Botão para selecionar a turma
-                    class_button = ctk.CTkButton(class_frame, text="Ver Conteúdo", command=lambda i=i: self.view_class_content(i), fg_color=self.base_color, hover_color=self.hover_color)
+                    class_button = ctk.CTkButton(
+                        class_frame, 
+                        text="Ver Conteúdo", 
+                        command=lambda turma=turma_info: tdu.mostrar_detalhes_turma(turma), 
+                        fg_color=self.base_color, 
+                        hover_color=self.hover_color
+                    )
                     class_button.pack(pady=10)
 
     def show_home(self):
@@ -226,18 +231,10 @@ class GoogleClassroomApp(ctk.CTk):
         else:
             messagebox.showerror("Erro", "Código de turma inválido. Tente novamente.")
 
-    def view_class_content(self, index):
-        # Exemplo de visualização do conteúdo de uma turma
-        class_info = self.classes[index]
-        messagebox.showinfo(f"Conteúdo da Turma: {class_info['name']}", f"Conteúdo de {class_info['name']} - {class_info['subtitle']}\nProfessor: {class_info['teacher']}")
-
     def logout(self):
     # Oculta a janela de logout
         self.parent.deiconify()
         self.destroy()
-
-        
-
 
 if __name__ == "__main__":
     app = GoogleClassroomApp(2,"pablo","munih","pablo@gmail.com")
