@@ -48,8 +48,34 @@ def salvar_turmas_em_arquivo(lista_nova):
         print("Turmas salvas com sucesso!")
     except Exception as e:
         print(f"Erro ao salvar turmas: {e}")
+def salvar_mural_em_arquivo(turma,aviso):
+    try:
+        with open('turmas.json', 'r') as file:
+            turmas = json.load(file)
 
-
+        turma_encontrada = next((turma for turma in turmas if turma['codigo'] == turma['codigo']), None)    
+        turma_encontrada['mural'].append(aviso)
+        with open('turmas.json', 'w') as file:
+            json.dump(turmas, file, indent=4)
+    except Exception as e:
+        print(f"Erro ao salvar turmas: {e}")
+def remover_turma(turma,codigo):
+    try:
+        with open('turmas.json', 'r') as file:
+            turmas = json.load(file)
+        turmas = [turma for turma in turmas if turma["codigo"] != codigo]
+        with open('turmas.json', 'w') as file:
+            json.dump(turmas, file, indent=4)
+    except Exception as e:
+        print(f"Erro ao salvar turmas: {e}")
+def remover_codigo_usuario(dados, email_usuario, codigo_remover):
+    # Verificar se o usuário existe
+    if email_usuario in dados:
+        # Se o código está na lista_colocadas, removê-lo
+        if codigo_remover in dados[email_usuario]['lista_colocadas']:
+            dados[email_usuario]['lista_colocadas'].remove(codigo_remover)
+    return dados  # Código removido com sucesso
+   
 # Função para carregar turmas de um arquivo JSON
 def carregar_turmas_de_arquivo():
     try:
@@ -61,8 +87,32 @@ def carregar_turmas_de_arquivo():
     except Exception as e:
         print(f"Erro ao carregar turmas: {e}")
         return []
+def carregar_json(caminho_arquivo):
+    with open(caminho_arquivo, 'r') as arquivo:
+        return json.load(arquivo)
 
+# Função para salvar o JSON no arquivo
+def salvar_json(caminho_arquivo, dados):
+    with open(caminho_arquivo, 'w') as arquivo:
+        json.dump(dados, arquivo, indent=4)
 
+def remover_codigo_de_listas(dados, codigo_remover):
+    # Percorrendo os usuários no JSON
+    for usuario, info in dados.items():
+        # Remover o código das listas 'lista_criadas' e 'lista_colocadas'
+        if codigo_remover in info['lista_criadas']:
+            info['lista_criadas'].remove(codigo_remover)
+        if codigo_remover in info['lista_colocadas']:
+            info['lista_colocadas'].remove(codigo_remover)
+    
+    return dados
+def verificar_codigo_usuario(dados, email_usuario, codigo_verificar):
+    # Verificar se o usuário existe
+    if email_usuario in dados:
+        # Verificar se o código está na lista_criadas do usuário
+        if codigo_verificar in dados[email_usuario]['lista_criadas']:
+            return True  # Código encontrado
+    return False
 def criar_turma(self):
     """Função para criar a interface de criação de turmas."""
     def salvar_turma():
@@ -120,12 +170,20 @@ def criar_turma(self):
     root.mainloop()
 
 
-def mostrar_detalhes_turma(turma):
+def mostrar_detalhes_turma(turma,self):
     def apagar_turma():
         if messagebox.askyesno("Confirmar", f"Você tem certeza que deseja apagar a turma '{turma.nome}'?"):
             turmas = carregar_turmas_de_arquivo()
-            turmas.remove(turma)  # Remove a turma da lista
-            salvar_turmas_em_arquivo()  # Salva as turmas restantes no arquivo JSON
+            print(turmas)
+            dados_json = carregar_json('users.json')
+            check = verificar_codigo_usuario(dados_json,self.email,turma.codigo)
+            if check:
+                remover_turma(turma,turma.codigo)  # Salva as turmas restantes no arquivo JSON
+                dados_atualizados = remover_codigo_de_listas(dados_json, turma.codigo)
+            else:
+                dados_atualizados = remover_codigo_usuario(dados_json, self.email,turma.codigo)
+
+            salvar_json('users.json', dados_atualizados)
             messagebox.showinfo("Sucesso", f"A turma '{turma.nome}' foi apagada com sucesso!")
             app.destroy()  # Fecha a janela de detalhes
            # atualizar_lista_turmas()  # Atualiza a lista de turmas na tela inicial
@@ -134,8 +192,9 @@ def mostrar_detalhes_turma(turma):
         def salvar_postagem():
             postagem = entry_postagem.get("1.0", "end-1c").strip()
             if postagem:
+                postagem = "Post\n" + postagem
                 turma.mural.append(postagem)  # Adiciona a postagem ao mural
-                salvar_turmas_em_arquivo()  # Salva as turmas no arquivo JSON
+                salvar_mural_em_arquivo(turma,postagem)  # Salva as turmas no arquivo JSON
                 messagebox.showinfo("Sucesso", "Postagem adicionada ao mural!")
                 atualizar_mural()  # Atualiza o mural na janela de detalhes
                 app_postagem.destroy()  # Fecha a janela de postagem

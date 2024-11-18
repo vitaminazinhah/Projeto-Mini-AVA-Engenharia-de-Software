@@ -153,10 +153,15 @@ class GoogleClassroomApp(ctk.CTk):
             for i, class_code in enumerate(self.classes):
                 # Carregando informações da turma pelo código
                 lista_de_turmas = tdu.carregar_turmas_de_arquivo()
-                print("oi")
                 turma_info = next((turma for turma in lista_de_turmas if turma.codigo == class_code), None)
 
                 if turma_info:
+                    first_name_encontrado = None
+                    # Itera sobre cada usuário no dicionário
+                    for email, user_data in data.items():
+                        if turma_info.codigo in user_data.get('lista_criadas', []):
+                            first_name_encontrado = user_data['first_name']
+                            break 
                     class_frame = ctk.CTkFrame(grid_frame, width=400, height=200, corner_radius=10, fg_color="#222222")
                     class_frame.grid(row=i//5, column=i%5, padx=20, pady=20)
 
@@ -165,7 +170,7 @@ class GoogleClassroomApp(ctk.CTk):
                     class_name_label.pack(pady=10)
 
                     # Subtítulo da turma
-                    class_subtitle_label = ctk.CTkLabel(class_frame, text=turma_info.descricao, font=ctk.CTkFont(size=12), text_color="white")
+                    class_subtitle_label = ctk.CTkLabel(class_frame, text=first_name_encontrado, font=ctk.CTkFont(size=12), text_color="white")
                     class_subtitle_label.pack(pady=5)
 
                     # Professor
@@ -173,7 +178,14 @@ class GoogleClassroomApp(ctk.CTk):
                     class_teacher_label.pack(pady=5)
 
                     # Botão para selecionar a turma
-                    class_button = ctk.CTkButton(class_frame, text="Ver Conteúdo", command=lambda i=i: self.view_class_content(i), fg_color=self.base_color, hover_color=self.hover_color)
+                    class_button = ctk.CTkButton(
+                        class_frame, 
+                        text="Ver Conteúdo", 
+                        command=lambda turma=turma_info: tdu.mostrar_detalhes_turma(turma,self), 
+                        fg_color=self.base_color, 
+                        hover_color=self.hover_color
+                    )
+
                     class_button.pack(pady=10)
 
     def show_home(self):
