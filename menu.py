@@ -157,8 +157,8 @@ class GoogleClassroomApp(ctk.CTk):
                 turma_info = next((turma for turma in lista_de_turmas if turma.codigo == class_code), None)
 
                 if turma_info:
-                    class_frame = ctk.CTkFrame(grid_frame, width=200, height=200, corner_radius=10, fg_color="#222222")
-                    class_frame.grid(row=i//2, column=i%2, padx=20, pady=20)
+                    class_frame = ctk.CTkFrame(grid_frame, width=400, height=200, corner_radius=10, fg_color="#222222")
+                    class_frame.grid(row=i//5, column=i%5, padx=20, pady=20)
 
                     # Nome da turma
                     class_name_label = ctk.CTkLabel(class_frame, text=turma_info.nome, font=ctk.CTkFont(size=16, weight="bold"), text_color="white")

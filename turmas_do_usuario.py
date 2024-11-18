@@ -87,7 +87,7 @@ def criar_turma(self):
             data[self.email]["lista_colocadas"].append(nova_turma.codigo)
             with open('users.json', 'w') as file:
                 json.dump(data, file, indent=4)
-            messagebox.showinfo("Sucesso, Você criou uma turma.")
+           # messagebox.showinfo("Sucesso, Você criou uma turma.")
 
     # Configuração da janela principal de criação de turma
     root = ctk.CTk()  # Usando Toplevel para criar uma nova janela

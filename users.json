@@ -25,7 +25,9 @@
         "last_name": "Grande",
         "password": "123456",
         "lista_criadas": [],
-        "lista_colocadas": []
+        "lista_colocadas": [
+            3802
+        ]
     },
     "rani@gmail.com": {
         "first_name": "raniel",
@@ -35,14 +37,22 @@
             4201,
             3802,
             3644,
-            7292
+            7292,
+            5480,
+            7368,
+            8400,
+            3690
         ],
         "lista_colocadas": [
             4993,
             4201,
             3802,
             3644,
-            7292
+            7292,
+            5480,
+            7368,
+            8400,
+            3690
         ]
     },
     "p@gmail.com": {
