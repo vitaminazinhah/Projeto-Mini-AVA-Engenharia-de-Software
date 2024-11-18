@@ -10,7 +10,6 @@ Este é um sistema simples de gerenciamento de turmas, que permite criar, visual
 - [Instalação](#instalação)
 - [Como Usar](#como-usar)
 - [Funcionalidades](#funcionalidades)
-- [Contribuindo](#contribuindo)
 - [Licença](#licença)
 
 ---
