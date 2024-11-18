@@ -2,17 +2,23 @@
     "emily@gmail.com": {
         "first_name": "emily",
         "last_name": "rocha",
-        "password": "91205362"
+        "password": "91205362",
+        "lista_criadas": [],
+        "lista_colocadas": []
     },
     "gata@gmail.com": {
         "first_name": "aaaaa",
         "last_name": "aaaaaa",
-        "password": "91205362"
+        "password": "91205362",
+        "lista_criadas": [],
+        "lista_colocadas": []
     },
     "pablom@gmail.com": {
         "first_name": "Pablo",
         "last_name": "Munih",
-        "password": "123456"
+        "password": "123456",
+        "lista_criadas": [],
+        "lista_colocadas": []
     },
     "arygrande@gmail.com": {
         "first_name": "Ariana",
@@ -25,9 +31,16 @@
         "first_name": "raniel",
         "last_name": "ferreira",
         "password": "123456",
-        "lista_criadas": [],
+        "lista_criadas": [
+            4201,
+            3802,
+            3644
+        ],
         "lista_colocadas": [
-            4993
+            4993,
+            4201,
+            3802,
+            3644
         ]
     },
     "p@gmail.com": {

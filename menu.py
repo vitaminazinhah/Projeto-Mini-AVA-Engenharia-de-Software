@@ -27,6 +27,7 @@ class GoogleClassroomApp(ctk.CTk):
         print(f"{self.name} {last_name} {email}")
         
         # Lista de códigos das turmas (para validação)
+        self.your_classes = []
         self.class_codes = []
 
         self.base_color = "#333333"  # Cor base escura para botões e elementos
@@ -179,7 +180,7 @@ class GoogleClassroomApp(ctk.CTk):
         messagebox.showinfo("Início", "Bem-vindo à plataforma Google Classroom!")
 
     def create_class(self):
-        subprocess.run(['python', 'turmas_do_usuario.py'])
+        tdu.tela_inicial(self)
 
     def join_class(self):
         # Exemplo de participação em turma
