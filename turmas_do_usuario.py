@@ -63,7 +63,7 @@ def carregar_turmas_de_arquivo():
         return []
 
 
-def criar_turma(root, self):
+def criar_turma(self):
     """Função para criar a interface de criação de turmas."""
     def salvar_turma():
         """Função interna para salvar a turma."""
@@ -77,10 +77,10 @@ def criar_turma(root, self):
             salvar_turmas_em_arquivo(turmas)  # Salva as turmas no arquivo JSON
 
             # Atualiza a lista de turmas na tela inicial
-            atualizar_lista_turmas(turmas)
+            #atualizar_lista_turmas(turmas)
 
             messagebox.showinfo("Sucesso", f"Turma '{nome_turma}' criada com sucesso!")
-            app.destroy()  # Fecha a tela de criação de turmas
+            root.destroy()  # Fecha a tela de criação de turmas
             with open('users.json', 'r') as file:
                 data = json.load(file)
             data[self.email]["lista_criadas"].append(nova_turma.codigo)
@@ -90,34 +90,34 @@ def criar_turma(root, self):
             messagebox.showinfo("Sucesso, Você criou uma turma.")
 
     # Configuração da janela principal de criação de turma
-    app = ctk.CTkToplevel(root)  # Usando Toplevel para criar uma nova janela
-    app.geometry("500x400")
-    app.title("Criar Turma")
+    root = ctk.CTk()  # Usando Toplevel para criar uma nova janela
+    root.geometry("500x400")
+    root.title("Criar Turma")
 
     # Título
-    label_titulo = ctk.CTkLabel(app, text="Criar Nova Turma", font=("Arial", 24, "bold"))
+    label_titulo = ctk.CTkLabel(root, text="Criar Nova Turma", font=("Arial", 24, "bold"))
     label_titulo.pack(pady=20)
 
     # Campo para o nome da turma
-    label_nome = ctk.CTkLabel(app, text="Nome da Turma:", font=("Arial", 14))
+    label_nome = ctk.CTkLabel(root, text="Nome da Turma:", font=("Arial", 14))
     label_nome.pack(anchor="w", padx=20)
 
-    entry_nome = ctk.CTkEntry(app, placeholder_text="Digite o nome da turma")
+    entry_nome = ctk.CTkEntry(root, placeholder_text="Digite o nome da turma")
     entry_nome.pack(fill="x", padx=20, pady=5)
 
     # Campo para a descrição da turma
-    label_descricao = ctk.CTkLabel(app, text="Descrição (opcional):", font=("Arial", 14))
+    label_descricao = ctk.CTkLabel(root, text="Descrição (opcional):", font=("Arial", 14))
     label_descricao.pack(anchor="w", padx=20)
 
-    entry_descricao = ctk.CTkTextbox(app, height=100)
+    entry_descricao = ctk.CTkTextbox(root, height=100)
     entry_descricao.pack(fill="x", padx=20, pady=5)
 
     # Botão para salvar
-    button_salvar = ctk.CTkButton(app, text="Salvar Turma", command=salvar_turma)
+    button_salvar = ctk.CTkButton(root, text="Salvar Turma", command=salvar_turma)
     button_salvar.pack(pady=20)
 
     # Rodar a aplicação
-    app.mainloop()
+    root.mainloop()
 
 
 def mostrar_detalhes_turma(turma):
@@ -128,7 +128,7 @@ def mostrar_detalhes_turma(turma):
             salvar_turmas_em_arquivo()  # Salva as turmas restantes no arquivo JSON
             messagebox.showinfo("Sucesso", f"A turma '{turma.nome}' foi apagada com sucesso!")
             app.destroy()  # Fecha a janela de detalhes
-            atualizar_lista_turmas()  # Atualiza a lista de turmas na tela inicial
+           # atualizar_lista_turmas()  # Atualiza a lista de turmas na tela inicial
 
     def fazer_postagem():
         def salvar_postagem():
@@ -189,7 +189,7 @@ def mostrar_detalhes_turma(turma):
 
     app.mainloop()
 
-
+'''
 def atualizar_lista_turmas(lista):
     """Atualiza a lista de turmas na tela inicial, criando um botão para cada turma."""
     
@@ -201,33 +201,33 @@ def atualizar_lista_turmas(lista):
         button_turma.pack(fill="x", padx=20, pady=5)
 
 
-def tela_inicial(self):
-    """Tela inicial com a lista de turmas e o botão 'Criar Turma'."""
-    global frame_turmas
-    turmas = carregar_turmas_de_arquivo()
-    turmas.extend(carregar_turmas_de_arquivo())  # Carrega turmas do arquivo JSON
+    def tela_inicial(self):
+        """Tela inicial com a lista de turmas e o botão 'Criar Turma'."""
+        global frame_turmas
+        turmas = carregar_turmas_de_arquivo()
+        turmas.extend(carregar_turmas_de_arquivo())  # Carrega turmas do arquivo JSON
 
-    # Configuração da janela inicial
-    root = ctk.CTk()
-    root.geometry("400x500")
-    root.title("Tela Inicial")
+        # Configuração da janela inicial
+        root = ctk.CTk()
+        root.geometry("400x500")
+        root.title("Tela Inicial")
 
-    # Título
-    label_titulo = ctk.CTkLabel(root, text="Suas Turmas:", font=("Arial", 24, "bold"))
-    label_titulo.pack(pady=30)
+        # Título
+        label_titulo = ctk.CTkLabel(root, text="Suas Turmas:", font=("Arial", 24, "bold"))
+        label_titulo.pack(pady=30)
 
-    # Frame para os botões das turmas
-    frame_turmas = ctk.CTkFrame(root)
-    frame_turmas.pack(fill="both", padx=20, pady=5, expand=True)
+        # Frame para os botões das turmas
+        frame_turmas = ctk.CTkFrame(root)
+        frame_turmas.pack(fill="both", padx=20, pady=5, expand=True)
 
-    # Atualiza a lista de turmas
-    atualizar_lista_turmas(turmas)
+        # Atualiza a lista de turmas
+        atualizar_lista_turmas(turmas)
 
-    # Botão para criar nova turma
-    button_criar_turma = ctk.CTkButton(root, text="Criar Turma", command=lambda: criar_turma(root, self))
-    button_criar_turma.pack(pady=20)
+        # Botão para criar nova turma
+        button_criar_turma = ctk.CTkButton(root, text="Criar Turma", command=lambda: criar_turma(root, self))
+        button_criar_turma.pack(pady=20)
 
-    # Rodar a aplicação
-    root.mainloop()
-
+        # Rodar a aplicação
+        root.mainloop()
+'''
 

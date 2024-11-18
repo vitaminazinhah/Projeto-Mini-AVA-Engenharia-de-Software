@@ -180,7 +180,7 @@ class GoogleClassroomApp(ctk.CTk):
         messagebox.showinfo("Início", "Bem-vindo à plataforma Google Classroom!")
 
     def create_class(self):
-        tdu.tela_inicial(self)
+        tdu.criar_turma(self)
 
     def join_class(self):
         # Exemplo de participação em turma
